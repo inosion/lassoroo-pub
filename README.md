@@ -28,18 +28,13 @@ Set these before `bash`, e.g. `curl -fsSL … | LASSOROO_VERSION=v0.1.0 bash`:
 | --- | --- | --- |
 | `LASSOROO_VERSION` | Release tag to install | newest release |
 | `LASSOROO_INSTALL_DIR` | Where to put the `lassoroo` binary | `~/.local/bin` |
-| `GITHUB_TOKEN` or `GH_TOKEN` | Token for downloading while this repository is private | none |
+| `GITHUB_TOKEN` or `GH_TOKEN` | GitHub token, to avoid anonymous rate limits | none |
 
-### While this repository is private
+### Rate limits
 
-Anonymous downloads (including `raw.githubusercontent.com`) return 404 until the repository
-is public. Use a token with read access to it, for example with the GitHub CLI:
-
-```sh
-export GH_TOKEN="$(gh auth token)"
-curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
-  https://raw.githubusercontent.com/inosion/lassoroo-pub/main/install.sh | bash
-```
+Without a token, GitHub allows 60 API requests an hour per IP address, and an install uses
+about 3. If many people install from one network at once, set a token first:
+`export GH_TOKEN="$(gh auth token)"`.
 
 ## Manual download
 
