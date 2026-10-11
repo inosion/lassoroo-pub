@@ -6,7 +6,7 @@
 # Options (environment variables):
 #   LASSOROO_VERSION       release tag to install (default: the newest release)
 #   LASSOROO_INSTALL_DIR   where to put the binary (default: ~/.local/bin)
-#   GITHUB_TOKEN/GH_TOKEN  token for downloading while the releases repository is private
+#   GITHUB_TOKEN/GH_TOKEN  GitHub token (avoids anonymous API rate limits; needed if private)
 #
 # This file is published to the releases repository by the release workflow; edit it in
 # the source repository (publish/install.sh).
@@ -60,10 +60,10 @@ main() {
     if [ -n "${LASSOROO_VERSION:-}" ]; then
         tag="$LASSOROO_VERSION"
         release_json="$(fetch "$api/repos/$repo/releases/tags/$tag")" ||
-            die "release $tag not found (private repository? set GITHUB_TOKEN)"
+            die "release $tag not found (network problem or GitHub rate limit? try again, or set GH_TOKEN)"
     else
         release_json="$(fetch "$api/repos/$repo/releases?per_page=1")" ||
-            die "could not list releases (private repository? set GITHUB_TOKEN)"
+            die "could not list releases (network problem or GitHub rate limit? try again, or set GH_TOKEN)"
         tag="$(json_lines | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')"
         [ -n "$tag" ] || die "no releases published yet"
     fi
